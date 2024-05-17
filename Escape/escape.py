@@ -1,7 +1,10 @@
+import inspect
 import turtle
 import pickle
 import argparse
 import random
+
+from Escape.hello_turtle import draw_bag
 def escaped(position):
     return position[0] < -35 or position[0] > 35 or position[1] < -35 or position[1] > 35
 
@@ -56,6 +59,11 @@ def draw_spirals_until_escaped():
         t.right(turn)
         store_position_data(L, t)
     return L
+def draw_triangles(number):
+    t = turtle.Turtle()
+    for i in range(1, number):
+        t.forward(i*10)
+        t.right(120)
 
 def draw_random_spirangles():
     L = []
@@ -63,6 +71,33 @@ def draw_random_spirangles():
         L.extend(draw_spirals_until_escaped())
         with open("data_rand", "wb") as f:
             pickle.dump(L, f)
+            
+if __name__ == '__main__':
+    fns = {"line": draw_line,
+    "squares": draw_squares_until_escaped,
+    "triangles": draw_triangles,
+    "spirangles" : draw_random_spirangles}
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--function",
+    choices = fns,
+    help="One of " + ', '.join(fns.keys()))
+    parser.add_argument("-n", "--number",
+    default = 50,
+    type=int, help="How many?")
+    args = parser.parse_args()
+    try:
+        f = fns[args.function]
+        turtle.setworldcoordinates(-70., -70., 70., 70.)
+        draw_bag()
+        turtle.hideturtle()
+        if len(inspect.getargspec(f).args)==1:
+            f(args.number)
+        else:
+            f()
+        turtle.mainloop()
+    except KeyError:
+        parser.print_help()
+
             
 
 
