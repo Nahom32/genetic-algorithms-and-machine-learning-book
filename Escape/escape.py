@@ -4,7 +4,7 @@ import pickle
 import argparse
 import random
 
-from Escape.hello_turtle import draw_bag
+from hello_turtle import draw_bag
 def escaped(position):
     return position[0] < -35 or position[0] > 35 or position[1] < -35 or position[1] > 35
 
